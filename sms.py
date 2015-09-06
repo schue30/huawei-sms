@@ -7,6 +7,7 @@ import csv
 import re
 from datetime import datetime
 
+
 __author__ = "Mathias Schuepany (https://github.com/schue30/)"
 __copyright__ = "Copyright (C) 2015 Mathias Schuepany (https://github.com/schue30/)"
 __license__ = "MIT License"
@@ -27,7 +28,7 @@ def send_sms(number, text):
         ser.write('AT+CMGS=%d\r' % pdu.length)
         while True:
             char = ser.read(1)
-			if len(char) > 0 and '>' in char:
+            if len(char) > 0 and '>' in char:
                 break
         ser.write('%s\x1a' % pdu.pdu)
         result = ""
@@ -36,7 +37,7 @@ def send_sms(number, text):
         while True:
             char = ser.read(1)
             if len(char) > 0:
-				result = result + char
+                result = result + char
             if re.match("^[ ]*[\r\n]*\+CMGS: [0-9]*[\r\n]+$", result):  # get msg id - (0-255)
                 msgid = result.strip()[6:].strip()
                 result = ""  # reset
@@ -56,8 +57,8 @@ def send_ussd(ussd):
     result = ""
     while True:
         char = serResult.read(1)
-		if len(char) > 0:
-			result = result + char
+        if len(char) > 0:
+            result = result + char
         if start in result and "\",15" in result:
             break
     serMain.close()
@@ -98,14 +99,14 @@ def send_multiple_sms(file, text):
 
 if __name__ == "__main__":
     text = "test" # message that should be sent
-	file = "members.csv" # file for multiple sms recipients (format: +436661234567;Lastname Firstname)
-	number = "+436661234567" # number for single sms
+    file = "members.csv" # file for multiple sms recipients (format: +436661234567;Lastname Firstname)
+    number = "+436661234567" # number for single sms
 	
-	send_single_sms(number, text) #send one sms
-	send_multiple_sms(file, text) #send multiple sms
+    send_single_sms(number, text) #send one sms
+    send_multiple_sms(file, text) #send multiple sms
 
-	print "\nLoad credit of prepaid card:"
-	print load_card("12345678912345")
+    print "\nLoad credit of prepaid card:"
+    print load_card("12345678912345")
 
-	print "\nCurrent balance:"
-	print get_balance()
+    print "\nCurrent balance:"
+    print get_balance()
